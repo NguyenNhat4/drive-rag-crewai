@@ -1,0 +1,7 @@
+list_drive_files_task:
+  description: >
+    Retrieve a list of all files and shareable links in the user's Google Drive.
+    Focus on clarity and formatting.
+  expected_output: >
+    A formatted list of file names and links from Google Drive.
+  agent: drive_agent
