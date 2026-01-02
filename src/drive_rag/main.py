@@ -4,7 +4,7 @@ import warnings
 
 from datetime import datetime
 
-from drive_rag.crew import DriveRag
+from drive_rag.crew import LatestAiDevelopmentCrew
 
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
@@ -23,7 +23,7 @@ def run():
     }
 
     try:
-        DriveRag().crew().kickoff(inputs=inputs)
+        LatestAiDevelopmentCrew().crew().kickoff(inputs=inputs)
     except Exception as e:
         raise Exception(f"An error occurred while running the crew: {e}")
 
@@ -37,7 +37,7 @@ def train():
         'current_year': str(datetime.now().year)
     }
     try:
-        DriveRag().crew().train(n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs)
+        LatestAiDevelopmentCrew().crew().train(n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs)
 
     except Exception as e:
         raise Exception(f"An error occurred while training the crew: {e}")
@@ -47,7 +47,7 @@ def replay():
     Replay the crew execution from a specific task.
     """
     try:
-        DriveRag().crew().replay(task_id=sys.argv[1])
+        LatestAiDevelopmentCrew().crew().replay(task_id=sys.argv[1])
 
     except Exception as e:
         raise Exception(f"An error occurred while replaying the crew: {e}")
@@ -62,7 +62,7 @@ def test():
     }
 
     try:
-        DriveRag().crew().test(n_iterations=int(sys.argv[1]), eval_llm=sys.argv[2], inputs=inputs)
+        LatestAiDevelopmentCrew().crew().test(n_iterations=int(sys.argv[1]), eval_llm=sys.argv[2], inputs=inputs)
 
     except Exception as e:
         raise Exception(f"An error occurred while testing the crew: {e}")
@@ -88,7 +88,7 @@ def run_with_trigger():
     }
 
     try:
-        result = DriveRag().crew().kickoff(inputs=inputs)
+        result = LatestAiDevelopmentCrew().crew().kickoff(inputs=inputs)
         return result
     except Exception as e:
         raise Exception(f"An error occurred while running the crew with trigger: {e}")
