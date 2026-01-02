@@ -2,9 +2,7 @@
 
 from typing import List, Dict, Optional
 from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
-import pickle
+from google.oauth2 import service_account
 import logging
 from datetime import datetime
 from pathlib import Path
@@ -17,9 +15,8 @@ logger = logging.getLogger(__name__)
 # Use pathlib to get path relative to drive_rag package (parent of tools)
 BASE_DIR = Path(__file__).parent.parent  # Goes from tools/ to drive_rag/
 CREDENTIALS_FOLDER = BASE_DIR / "credentials"
-# Path where token and credentials are stored after setup
-TOKEN_FILE = CREDENTIALS_FOLDER / "token.pickle"
-CREDENTIALS_FILE = CREDENTIALS_FOLDER / "credentials.json"
+# Path to service account credentials file
+SERVICE_ACCOUNT_FILE = CREDENTIALS_FOLDER / "service-account.json"
 SCOPES = [
     'https://www.googleapis.com/auth/drive.metadata.readonly',
     'https://www.googleapis.com/auth/drive.readonly'  # For downloading
@@ -31,33 +28,24 @@ CREDENTIALS_FOLDER.mkdir(parents=True, exist_ok=True)
 
 def get_drive_service():
     """
-    Authenticate and return Google Drive service.
+    Authenticate and return Google Drive service using Service Account.
     Reusable across multiple functions.
     """
-    creds = None
-    
-    # Load saved credentials
-    if TOKEN_FILE.exists():
-        with open(TOKEN_FILE, 'rb') as token:
-            creds = pickle.load(token)
-    
-    # Refresh or create new credentials
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            logger.info("Refreshing expired credentials...")
-            creds.refresh(Request())
-        else:
-            logger.info("Starting OAuth flow...")
-            flow = InstalledAppFlow.from_client_secrets_file(
-                CREDENTIALS_FILE, SCOPES
-            )
-            creds = flow.run_local_server(port=0)
-        
-        # Save credentials
-        with open(TOKEN_FILE, 'wb') as token:
-            pickle.dump(creds, token)
-        logger.info("Credentials saved")
-    
+    # Check if service account file exists
+    if not SERVICE_ACCOUNT_FILE.exists():
+        raise FileNotFoundError(
+            f"Service account credentials not found at {SERVICE_ACCOUNT_FILE}\n"
+            f"Please place your service-account.json file in the credentials folder."
+        )
+
+    # Load service account credentials
+    logger.info("Loading service account credentials...")
+    creds = service_account.Credentials.from_service_account_file(
+        str(SERVICE_ACCOUNT_FILE),
+        scopes=SCOPES
+    )
+
+    logger.info("Service account authenticated successfully")
     return build('drive', 'v3', credentials=creds)
 
 
