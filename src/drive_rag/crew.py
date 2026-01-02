@@ -4,7 +4,11 @@ from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from typing import List
-from drive_rag.tools.google_drive_list_tool import list_google_drive_files
+from drive_rag.tools import (
+    GoogleDriveListTool,
+    GoogleDrivePilotFolderTool,
+    GoogleDriveDownloadTool
+)
 
 
 @CrewBase
@@ -19,7 +23,11 @@ class LatestAiDevelopmentCrew():
         return Agent(
             config=self.agents_config['drive_agent'], # type: ignore[index]
             verbose=True,
-            tools=[list_google_drive_files]
+            tools=[
+                GoogleDriveListTool(),
+                GoogleDrivePilotFolderTool(),
+                GoogleDriveDownloadTool()
+            ]
         )
 
     @task
