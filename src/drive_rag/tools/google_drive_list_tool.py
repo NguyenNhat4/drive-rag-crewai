@@ -4,29 +4,29 @@ from typing import List, Dict, Optional
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
-import os
 import pickle
 import logging
 from datetime import datetime
+from pathlib import Path
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Constants
-# Use path relative to current file location
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-CREDENTIALS_FOLDER = os.path.join(BASE_DIR, "credentials")
+# Use pathlib to get path relative to drive_rag package (parent of tools)
+BASE_DIR = Path(__file__).parent.parent  # Goes from tools/ to drive_rag/
+CREDENTIALS_FOLDER = BASE_DIR / "credentials"
 # Path where token and credentials are stored after setup
-TOKEN_FILE = os.path.join(CREDENTIALS_FOLDER, "token.pickle")
-CREDENTIALS_FILE = os.path.join(CREDENTIALS_FOLDER, "credentials.json")
+TOKEN_FILE = CREDENTIALS_FOLDER / "token.pickle"
+CREDENTIALS_FILE = CREDENTIALS_FOLDER / "credentials.json"
 SCOPES = [
     'https://www.googleapis.com/auth/drive.metadata.readonly',
     'https://www.googleapis.com/auth/drive.readonly'  # For downloading
 ]
 
 # Create credentials folder if not exists
-os.makedirs(CREDENTIALS_FOLDER, exist_ok=True)
+CREDENTIALS_FOLDER.mkdir(parents=True, exist_ok=True)
 
 
 def get_drive_service():
@@ -37,7 +37,7 @@ def get_drive_service():
     creds = None
     
     # Load saved credentials
-    if os.path.exists(TOKEN_FILE):
+    if TOKEN_FILE.exists():
         with open(TOKEN_FILE, 'rb') as token:
             creds = pickle.load(token)
     
