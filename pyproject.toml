@@ -2,14 +2,17 @@
 name = "drive_rag"
 version = "0.1.0"
 description = "drive-rag using crewAI"
-authors = [{ name = "Your Name", email = "you@example.com" }]
+authors = [
+    { name = "Your Name", email = "you@example.com" },
+]
 requires-python = ">=3.10,<3.14"
 dependencies = [
     "crewai[tools]==1.7.2",
     "google-api-python-client>=2.0.0",
     "google-auth>=2.0.0",
     "google-auth-oauthlib>=1.0.0",
-    "google-auth-httplib2>=0.1.0"
+    "google-auth-httplib2>=0.1.0",
+    "google-genai>=1.49.0",
 ]
 
 [project.scripts]
@@ -21,7 +24,9 @@ test = "drive_rag.main:test"
 run_with_trigger = "drive_rag.main:run_with_trigger"
 
 [build-system]
-requires = ["hatchling"]
+requires = [
+    "hatchling",
+]
 build-backend = "hatchling.build"
 
 [tool.crewai]

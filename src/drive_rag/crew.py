@@ -7,7 +7,8 @@ from typing import List
 from drive_rag.tools import (
     GoogleDriveListTool,
     GoogleDrivePilotFolderTool,
-    GoogleDriveDownloadTool
+    GoogleDriveDownloadTool,
+    GoogleDriveSharedFilesTool
 )
 
 
@@ -19,14 +20,15 @@ class LatestAiDevelopmentCrew():
     tasks: List[Task]
 
     @agent
-    def driveRAG(self) -> Agent:
+    def drive_agent(self) -> Agent:
         return Agent(
             config=self.agents_config['drive_agent'], # type: ignore[index]
             verbose=True,
             tools=[
                 GoogleDriveListTool(),
                 GoogleDrivePilotFolderTool(),
-                GoogleDriveDownloadTool()
+                GoogleDriveDownloadTool(),
+                GoogleDriveSharedFilesTool()
             ]
         )
 
